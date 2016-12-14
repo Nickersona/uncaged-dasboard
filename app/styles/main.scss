@@ -1,0 +1,18 @@
+// bower:scss
+// endbower
+
+@import 'variables';
+@import 'global';
+
+// Components
+@import 'dashboard-label';
+@import 'donation-item';
+@import 'logo';
+@import 'wrapper';
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}

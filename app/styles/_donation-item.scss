@@ -1,0 +1,17 @@
+// Donation Item
+// ===
+//
+
+.c-donation-item {
+    color: $neutral-10;
+    font-size: $xlarge-text-size;
+    font-weight: 500;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 30%;
+        margin-top: 5vw;
+        border-bottom: 2px solid rgba($neutral-10, 0.3);
+    }
+}
