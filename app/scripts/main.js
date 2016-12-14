@@ -1,5 +1,3 @@
-const ENDPOINT = 'http://demo5321111.mockable.io';
-const API_KEY = 'key123';
 const TIMEOUT = 4500;
 
 var SiteActivity = function(element, endpoint){
@@ -66,4 +64,4 @@ function removeAdds(fundAllocation){
   return fundAllocation.icon === "dashboard-send";
 }
 
-new SiteActivity(document.querySelector('.js-site-activity'), `${ENDPOINT}/site-activity?api_key=${API_KEY}` );
+new SiteActivity(document.querySelector('.js-site-activity'), '/site-activity');

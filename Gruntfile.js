@@ -2,6 +2,10 @@
 // generator-webapp 1.1.0
 'use strict';
 
+const nodeConifg = require('./lib/config-load')();
+const browserSyncMiddleware = require('./lib/middleware')
+const PORT = nodeConifg.PORT;
+
 // # Globbing
 // for performance reasons we're only matching one level down:
 // 'test/spec/{,*/}*.js'
@@ -73,13 +77,14 @@ module.exports = function (grunt) {
             '<%= config.app %>/images/{,*/}*',
             '.tmp/scripts/{,*/}*.js'
           ],
-          port: 9000,
+          port: PORT,
           server: {
             baseDir: ['.tmp', config.app],
             routes: {
               '/bower_components': './bower_components'
             }
-          }
+          },
+          middleware: browserSyncMiddleware,
         }
       },
       test: {
@@ -413,6 +418,7 @@ module.exports = function (grunt) {
       'mocha'
     ]);
   });
+
 
   grunt.registerTask('build', [
     'clean:dist',
