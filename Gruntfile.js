@@ -85,7 +85,7 @@ module.exports = function (grunt) {
               '/bower_components': './bower_components'
             }
           },
-          middleware: browserSyncMiddleware,
+          middleware: [browserSyncMiddleware],
         }
       },
       test: {
@@ -437,7 +437,7 @@ module.exports = function (grunt) {
     'htmlmin'
   ]);
 
-  grunt.registerTask('heroku', ['serve:dist']);
+  grunt.registerTask('heroku', ['build:dist']);
 
   grunt.registerTask('default', [
     'newer:eslint',
