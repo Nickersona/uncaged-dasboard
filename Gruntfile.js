@@ -71,6 +71,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
+          open:false,
           files: [
             '<%= config.app %>/{,*/}*.html',
             '.tmp/styles/{,*/}*.css',
@@ -435,6 +436,8 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin'
   ]);
+
+  grunt.registerTask('heroku', ['serve:dist']);
 
   grunt.registerTask('default', [
     'newer:eslint',
