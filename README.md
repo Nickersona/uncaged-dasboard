@@ -1,26 +1,30 @@
 # uncaged-dasboard
 
-Simple rotating carousel of donations from Chimp.net's /site-activity.json feed 
+Simple rotating carousel of donations from Chimp.net's /site-activity.json feed. 
 
 ## Getting Started
 
+### First things' first: 
 The project uses Grunt, so you should install it globally for an easy alias with `npm install -g grunt-cli`
 You can now run tasks defined in the /Gruntfile.js.
 
 Likewise we also use bower. `npm install -g bower` to have access to the install command. Run a `bower install` to get the app deps
 
 ### Important Tasks
-`grunt serve` - Builds the application and starts a livereloading dev server at the PORT env variable, this is everything you need to dev.
-`grunt build:dist` Builds the assets into a the ./dist/ dir for the asset server.
-`npm start` runs the very simple node server.js which acts as a static asset server for ./dist at `http://localhost:PORT`
+- `grunt serve` - Builds the application and starts a livereloading dev server at the PORT env variable, this is everything you need to dev.
+- `grunt build:dist` Builds the assets into a the ./dist/ dir for the asset server.
+- `npm start` runs the very simple node server.js which acts as a static asset server for ./dist at `http://localhost:PORT`
 
-`grunt build:dist` and `npm start` are what 
+`grunt build:dist` and `npm start` are what heroku runs on deploy.
 
 ## important Env variables
-PORT {int} Port the server accepts requeest on
-DEBUG_MODE {bool} how verbose loggin is for the application.
-ENDPOINT {string} - root url for checking site-activity. eg an `ENDPOINT=https://chimp.net` will look for the activity feed at `https://chimp.net/site-activity.json`
-API_KEY {string} - Currently applies this as a query paramter to the /site-acitivty.json request as a query Paramter as `?api_key=API_KEY`
+- PORT {int} Port the server accepts requeest on
+- DEBUG_MODE {bool} how verbose loggin is for the application.
+- ENDPOINT {string} - root url for checking site-activity. eg an `API=https://chimp.net` will look for the activity feed at `https://chimp.net/site-activity.json`
+- API_KEY {string} - Currently applies this as a query paramter to the /site-acitivty.json request as a query Paramter as `?api_key=API_KEY`
+
+### Overidding Env variables
+For local development these variables can be store in `./config/default.js`. If you'd like to modify them with out fear of commiting sensitive info, include a `./config/locals.js with the same keys and they'll overwrite the defaults. locals.js is .gitingnored, and should never be commited. When deployed to Heroku, just update the environment variables and they'll override the defaults
 
 ## Deploying to Heroku
 
