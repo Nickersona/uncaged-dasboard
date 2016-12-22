@@ -8,7 +8,7 @@ var SiteActivity = function(element, endpoint){
     this.chimperReplacements = ['A beautiful soul', 'A generous heart', 'A thoughtful giver', 'A savvy tax planner', 'An authentic changemaker', 'An empowered human spirit'];
 
     this.callSiteActivityEndPoint();
-    setInterval(callSiteActivityEndPoint, 1000 * 60 * 60)
+    setInterval(this.callSiteActivityEndPoint.bind(this), 1000 * 60 * 60)
 };
 
 
