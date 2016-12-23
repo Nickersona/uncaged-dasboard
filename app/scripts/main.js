@@ -16,9 +16,9 @@
         'An empowered human spirit'
     ];
 
-    const processMessage = (text) => {
+    function processMessage(text) {
       //Wraps the money in a money in a span to highlight
-      text = text.replace(/\$(.*?)(\s)/, `<span style="${HIGHLIGHT_CLASS}">$1 </span>`);
+      text = text.replace(/\$(.*?)(\s)/, '<span style="' + HIGHLIGHT_CLASS + '">$1 </span>');
 
       //Replace Chimper with a randomly selected name from the chimper array
       var replacement = chimperReplacements[Math.floor(Math.random() * chimperReplacements.length)];
@@ -27,10 +27,10 @@
     }
 
 
-    const recieveNewData = (containerEl, data) => {
+    function recieveNewData(containerEl, data) {
         const activity = data;
-        let textElement = containerEl.querySelector('.js-current-item')
-        let idx, rotate;
+        var textElement = containerEl.querySelector('.js-current-item')
+        var idx, rotate;
 
         if ((activity == null) || activity.length <= 0) {
             console.log('No activity Found');
@@ -38,7 +38,7 @@
         }
 
         idx = 0;
-        rotate = () => {
+        rotate = function() {
             var next;
 
             // cycles around and start all over again
@@ -58,18 +58,18 @@
         return rotate();
     }
 
-    const removeAdds = (fundAllocation) => {
+    function removeAdds (fundAllocation) {
         return fundAllocation.icon === "dashboard-send";
     }
 
-    const fetchSiteActivity = (el, endpoint) => {
+    function fetchSiteActivity (el, endpoint) {
         $.get(endpoint, null, function(activityData){
             var rotatorData = _.filter(activityData, removeAdds);
             recieveNewData(el, rotatorData);
         }, "json");
     }
 
-    const initActivityRotator = (element, endpoint) => {
+    function initActivityRotator (element, endpoint) {
         fetchSiteActivity(element, endpoint); // Initial fetch
         setInterval(fetchSiteActivity.bind(null, element, endpoint), FETCH_DATA_INTERVAL)
     };
