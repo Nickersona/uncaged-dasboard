@@ -1,70 +1,80 @@
-const TIMEOUT = 4500;
+(function() {
+    // Timing Constants
+    const CYCLE_TIMEOUT = 10000;
+    const FETCH_DATA_INTERVAL = 1000 * 60 * 60;
 
-var SiteActivity = function(element, endpoint){
-    this.el = element;
-    this.endpoint = endpoint;
-    this.activity = [];
-    this.highlightClass = 'js-highlight';
-    this.chimperReplacements = ['A beautiful soul', 'A generous heart', 'A thoughtful giver', 'A savvy tax planner', 'An authentic changemaker', 'An empowered human spirit'];
+    // Classes
+    const HIGHLIGHT_CLASS = 'js-highlight';
 
-    this.callSiteActivityEndPoint();
-    setInterval(this.callSiteActivityEndPoint.bind(this), 1000 * 60 * 60)
-};
+    // Replacements Array. Each slide randomly picks a title from this list.
+    const chimperReplacements = [
+        'A beautiful soul',
+        'A generous heart',
+        'A thoughtful giver',
+        'A savvy tax planner',
+        'An authentic changemaker',
+        'An empowered human spirit'
+    ];
 
+    const processMessage = (text) => {
+      //Wraps the money in a money in a span to highlight
+      text = text.replace(/\$(.*?)(\s)/, `<span style="${HIGHLIGHT_CLASS}">$1 </span>`);
 
-SiteActivity.prototype.processText = function(text){
-
-  //Wraps the money in a money in a span to highlight
-  text = text.replace(/\$(.*?)(\s)/, '<span style="'+ this.highlightClass +'">$1 </span>');
-
-  //Replace Chimper with a randomly selected name from the chimper array
-  var replacement = this.chimperReplacements[Math.floor(Math.random()*this.chimperReplacements.length)]
-  text = text.replace(/A Chimper/, replacement)
-  return text;
-}
-
-SiteActivity.prototype.initActivityRotator = function(data){
-    var textElement = this.el.querySelector('.js-current-item')
-    var idx, rotate;
-    var activity = data;
-
-    if ((activity == null) || activity.length <= 0) {
-        console.log('No activity Found');
-        return;
+      //Replace Chimper with a randomly selected name from the chimper array
+      var replacement = chimperReplacements[Math.floor(Math.random() * chimperReplacements.length)];
+      text = text.replace(/A Chimper/, replacement);
+      return text;
     }
 
-    idx = 0;
-    var self = this;
-    rotate = function() {
-        var next;
 
-        if (idx === activity.length) {
-            idx = 0;
+    const recieveNewData = (containerEl, data) => {
+        const activity = data;
+        let textElement = containerEl.querySelector('.js-current-item')
+        let idx, rotate;
+
+        if ((activity == null) || activity.length <= 0) {
+            console.log('No activity Found');
+            return;
         }
 
-        next = activity[idx];
-        return $(self.el).fadeOut(1000, function() {
-            textElement.innerHTML = self.processText(next.text);
-            return $(self.el).fadeIn(600, function() {
-                idx = idx + 1;
-                return setTimeout(rotate, TIMEOUT);
+        idx = 0;
+        rotate = () => {
+            var next;
+
+            // cycles around and start all over again
+            if (idx === activity.length) {
+                idx = 0;
+            }
+
+            next = activity[idx];
+            return $(containerEl).fadeOut(1000, function() {
+                textElement.innerHTML = processMessage(next.text);
+                return $(containerEl).fadeIn(600, function() {
+                    idx++;
+                    return setTimeout(rotate, CYCLE_TIMEOUT);
+                });
             });
-        });
+        };
+        return rotate();
+    }
+
+    const removeAdds = (fundAllocation) => {
+        return fundAllocation.icon === "dashboard-send";
+    }
+
+    const fetchSiteActivity = (el, endpoint) => {
+        $.get(endpoint, null, function(activityData){
+            var rotatorData = _.filter(activityData, removeAdds);
+            recieveNewData(el, rotatorData);
+        }, "json");
+    }
+
+    const initActivityRotator = (element, endpoint) => {
+        fetchSiteActivity(element, endpoint); // Initial fetch
+        setInterval(fetchSiteActivity.bind(null, element, endpoint), FETCH_DATA_INTERVAL)
     };
-    return rotate();
-}
 
-SiteActivity.prototype.callSiteActivityEndPoint  = function() {
-    $.get(this.endpoint, null, function(activityData){
-        this.activity = activityData;
-        var rotatorData = _.filter(this.activity, removeAdds);
 
-        this.initActivityRotator(rotatorData);
-    }.bind(this), "json");
-}
 
-function removeAdds(fundAllocation){
-  return fundAllocation.icon === "dashboard-send";
-}
-
-new SiteActivity(document.querySelector('.js-site-activity'), '/site-activity');
+    initActivityRotator(document.querySelector('.js-site-activity'), '/site-activity');
+})();
