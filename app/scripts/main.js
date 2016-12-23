@@ -7,14 +7,8 @@ var SiteActivity = function(element, endpoint){
     this.highlightClass = 'js-highlight';
     this.chimperReplacements = ['A beautiful soul', 'A generous heart', 'A thoughtful giver', 'A savvy tax planner', 'An authentic changemaker', 'An empowered human spirit'];
 
-
-
-    $.get(this.endpoint, null, function(activityData){
-        this.activity = activityData;
-        var rotatorData = _.filter(this.activity, removeAdds);
-
-        this.initActivityRotator(rotatorData);
-    }.bind(this), "json");
+    this.callSiteActivityEndPoint();
+    setInterval(this.callSiteActivityEndPoint.bind(this), 1000 * 60 * 60)
 };
 
 
@@ -58,6 +52,15 @@ SiteActivity.prototype.initActivityRotator = function(data){
         });
     };
     return rotate();
+}
+
+SiteActivity.prototype.callSiteActivityEndPoint  = function() {
+    $.get(this.endpoint, null, function(activityData){
+        this.activity = activityData;
+        var rotatorData = _.filter(this.activity, removeAdds);
+
+        this.initActivityRotator(rotatorData);
+    }.bind(this), "json");
 }
 
 function removeAdds(fundAllocation){
